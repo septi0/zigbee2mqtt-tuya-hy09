@@ -7,7 +7,7 @@ As a result, default Zigbee2MQTT converters expose incorrect or incomplete funct
 
 This converter intentionally **overrides the reported Zigbee identity** and implements the **correct datapoint mapping for the HY09 thermostat**, based on real device behavior.
 
-![Thermostat](img/thermostat.png)
+![Thermostat](img/thermostat.jpg)
 ![Circuitboard](img/circuitboard.png)
 
 ## Installation
