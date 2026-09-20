@@ -21,7 +21,9 @@ Copy the converter file into your Zigbee2MQTT data directory, for example: `zigb
 - Target (setpoint) temperature  
   - Range: `5–35 °C`
   - Step: `0.5 °C`
+  - The thermostat additionally enforces its own `min_temperature` / `max_temperature` limits
 - Current room temperature
+- Room temperature calibration: `-9` to `+9 °C`
 - Heating running state:
   - `idle`
   - `heat`
@@ -30,6 +32,8 @@ Copy the converter file into your Zigbee2MQTT data directory, for example: `zigb
   - `auto`
   - `mixed`
   - `holiday`
+
+  The thermostat ignores a remote switch back to `auto`, use the buttons on the device for that.
 
 ---
 
@@ -54,11 +58,13 @@ Each period must be written in the following format:
 
 ```hh:mm/cc.c°C```
 
-Multiple periods are separated by spaces.
+Multiple periods are separated by spaces. Hours are `0–23`, minutes `0–59` and the temperature `5–35 °C` in **whole degrees**. Invalid schedules are rejected with an error message instead of being sent to the device.
 
 **Example (valid schedule block):**
 
 ```06:00/21.0°C 12:00/18.0°C 18:00/22.0°C```
+
+> The thermostat only reports a schedule when it is edited on the device, so the schedule values in Zigbee2MQTT can be stale until then.
 
 ---
 
@@ -69,9 +75,17 @@ Multiple periods are separated by spaces.
 
 ### Additional configuration
 - Child lock
+- Power-on behavior (`previous`, `off`, `on`; only `previous` has been verified, the manual only lists "with memory" and "without memory")
+- Hysteresis (`temperature_return_difference`): `0.5–2.5 °C`, step `0.5`
 - High temperature protection (enable/disable)
 - Low temperature protection (enable/disable)
 - High temperature limit
 - Low temperature limit
-- Hysteresis / deadzone configuration
-- Error status reporting
+- Protection hysteresis / deadzone configuration
+- Minimum temperature limit (`1–10 °C`) and maximum temperature limit (`20–90 °C`)
+
+### Read only
+- Sensor mode (`IN`, `OU`, `AL`), only reported when it changes on the device
+- External sensor temperature (`0` when no sensor is connected)
+- High temperature alarm
+- Error status reporting (raw value)
